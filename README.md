@@ -1,44 +1,69 @@
 # Curated Skills
 
-A production-ready Astro + Cloudflare site for browsing, inspecting, and downloading coding-agent skills stored in `src/skills`.
+A curated collection of coding-agent skills for AI development workflows. Browse, inspect, and download skills directly from this repository.
 
-It builds a public catalog directly from the filesystem and exposes:
+## What's Here
 
-- a browsable skills index
-- per-skill detail pages with `SKILL.md` previews
-- direct file downloads
-- ZIP downloads for complete skill packages
+This repository contains a catalog of reusable skills designed for AI coding agents. Each skill includes:
 
-## Features
+- **Documentation** (`SKILL.md`) - Purpose, usage instructions, and examples
+- **Source files** - Scripts, templates, and references
+- **Metadata** - Dependencies, configuration, and integration notes
 
-- Filesystem-driven skill discovery from `src/skills/*`
-- Static generation (`prerender`) for skill pages and download routes
-- Syntax-highlighted `SKILL.md` previews (Shiki)
-- Per-file and per-skill ZIP download endpoints
-- Tailwind CSS v4 styling
-- Cloudflare adapter + Wrangler deploy workflow
+Browse the skills online at the [live demo](https://your-site.com) or explore them directly in the `src/skills` directory.
 
-## Tech Stack
+## Available Skills
 
-- [Astro](https://astro.build/)
-- [Cloudflare Adapter for Astro](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)
-- [Wrangler](https://developers.cloudflare.com/workers/wrangler/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [JSZip](https://stuk.github.io/jszip/)
-- [Shiki](https://shiki.style/)
+Visit the homepage to see all available skills, or browse them in `src/skills/`. Each skill is self-contained and can be downloaded individually.
 
-## Requirements
+## Using Skills
 
-- Node.js 20+ (recommended)
-- `pnpm`
-- Cloudflare account + Wrangler auth (for deploy/preview via `wrangler dev`)
+Skills are designed to be integrated into your AI agent workflows. Most skills include:
 
-## Quick Start
+1. A `SKILL.md` file with documentation
+2. Required scripts and dependencies
+3. Usage examples and configuration
+
+Download any skill as a ZIP file or inspect its files directly on the site.
+
+---
+
+## Development
+
+If you're interested in running this site locally or contributing skills:
 
 ```sh
 pnpm install
 pnpm dev
 ```
+
+Open `http://localhost:4321` to view the skills catalog.
+
+### Adding a New Skill
+
+1. Create a folder under `src/skills/<your-skill-name>/`
+2. Add a `SKILL.md` file with frontmatter:
+
+```md
+---
+name: My Skill
+description: What this skill does and when to use it.
+license: MIT
+---
+
+# My Skill
+
+Documentation goes here.
+```
+
+3. Add any supporting files (scripts, templates, references)
+4. Run `pnpm dev` to verify it appears on the homepage
+
+### Tech Stack
+
+- [Astro](https://astro.build/) - Static site generator
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [Shiki](https://shiki.style/) - Syntax highlighting
 
 Open `http://localhost:4321`.
 
