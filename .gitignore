@@ -198,6 +198,9 @@ wrangler.jsonc
 src/routeTree.gen.ts
 .tanstack/
 
+# Astro build cache
+.astro/
+
 ### IDE / Editor ###
 .idea/
 .vscode/
