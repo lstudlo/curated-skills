@@ -17,8 +17,12 @@
   --accent: oklch(0.922 0.235 126.092);
 }
 
+.shiki,
+.shiki span {
+  background-color: transparent !important;
+}
+
 html.dark .shiki,
 html.dark .shiki span {
   color: var(--shiki-dark) !important;
-  background-color: var(--shiki-dark-bg) !important;
 }

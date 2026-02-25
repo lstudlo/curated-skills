@@ -5,8 +5,18 @@ import ThemeToggle from './ThemeToggle.astro';
 <header class="sticky top-0 z-20 bg-white/75 backdrop-blur-xl dark:border-zinc-800 dark:bg-black/70">
   <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-7 py-4 md:px-9">
     <a href="/" class="group min-w-0">
-      <div class="font-serif text-xl leading-none tracking-tight group-hover:opacity-80 sm:text-2xl">
-        Curated Skills
+      <div class="flex items-center gap-2 sm:gap-3 group-hover:opacity-80">
+        <div class="font-serif text-xl leading-none tracking-tight sm:text-2xl">
+          Curated Skills
+        </div>
+        <span class="text-[10px] tracking-[0.14em] text-primary sm:text-[11px]">
+          by
+        </span>
+        <img
+          src="/lstudlo_logo.svg"
+          alt="lstudlo"
+          class="h-3.5 shrink-0 dark:invert"
+        />
       </div>
     </a>
 
