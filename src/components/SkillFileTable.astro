@@ -1,0 +1,70 @@
+---
+import type { SkillFileEntry } from '../lib/skills';
+import {
+  buildSkillDownloadHref,
+  buildSkillFileHref,
+  formatBytes,
+} from '../lib/skills';
+
+interface Props {
+  files: SkillFileEntry[];
+  skillSlug: string;
+}
+
+const { files, skillSlug } = Astro.props as Props;
+---
+
+<div class="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white/75 dark:border-zinc-800 dark:bg-zinc-950/70">
+  <div class="hidden grid-cols-[minmax(0,1fr)_auto_auto_auto] gap-4 border-b border-zinc-200/80 px-5 py-3 text-[11px] tracking-[0.16em] text-zinc-500 uppercase dark:border-zinc-800 md:grid">
+    <div>File</div>
+    <div>Type</div>
+    <div>Size</div>
+    <div class="text-right">Actions</div>
+  </div>
+
+  <ul class="divide-y divide-zinc-200/70 dark:divide-zinc-800">
+    {files.map((file) => (
+      <li class="px-4 py-3 md:px-5">
+        <div class="flex flex-col gap-3 md:grid md:grid-cols-[minmax(0,1fr)_auto_auto_auto] md:items-center md:gap-4">
+          <div class="min-w-0">
+            <a
+              href={buildSkillFileHref(skillSlug, file.relativePath)}
+              class="group block rounded-lg p-1 -m-1 transition hover:bg-zinc-100/80 dark:hover:bg-zinc-900"
+            >
+              <div class="truncate font-mono text-sm text-zinc-900 group-hover:underline dark:text-zinc-50">
+                {file.relativePath}
+              </div>
+              <div class="mt-1 text-xs text-zinc-500">
+                {file.relativePath.includes('/') ? file.relativePath.split('/').slice(0, -1).join('/') : 'root'}
+              </div>
+            </a>
+          </div>
+
+          <div>
+            <span class="inline-flex rounded-full border border-zinc-300/80 px-2 py-0.5 font-mono text-[11px] uppercase dark:border-zinc-700">
+              {file.extension ? file.extension.replace('.', '') : 'file'}
+            </span>
+          </div>
+
+          <div class="font-mono text-xs text-zinc-500">{formatBytes(file.sizeBytes)}</div>
+
+          <div class="flex items-center gap-2 md:justify-end">
+            <a
+              href={buildSkillFileHref(skillSlug, file.relativePath)}
+              class="rounded-full border border-zinc-300/80 px-2.5 py-1 text-xs hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
+            >
+              View
+            </a>
+            <a
+              href={buildSkillDownloadHref(skillSlug, file.relativePath)}
+              class="rounded-full border border-zinc-300/80 px-2.5 py-1 text-xs hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
+              download
+            >
+              Download
+            </a>
+          </div>
+        </div>
+      </li>
+    ))}
+  </ul>
+</div>

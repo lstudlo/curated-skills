@@ -1,0 +1,142 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import SkillFileTable from '../../../components/SkillFileTable.astro';
+import { buildSkillDownloadHref, formatBytes, getSkillBySlug, getSkillFileContent, getSkillStaticPaths } from '../../../lib/skills';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return getSkillStaticPaths();
+}
+
+const skillSlug = Astro.params.skill ?? '';
+const skill = await getSkillBySlug(skillSlug);
+
+if (!skill) {
+  throw new Error(`Unknown skill: ${skillSlug}`);
+}
+
+const skillDoc = skill.hasSkillMarkdown
+  ? await getSkillFileContent(skill.slug, 'SKILL.md')
+  : null;
+
+const skillDocPreview = skillDoc
+  ? skillDoc.content
+      .split(/\r?\n/)
+      .slice(0, 18)
+      .join('\n')
+      .trim()
+  : null;
+
+const topLevelSections = Array.from(
+  new Set(
+    skill.files
+      .map((file) => {
+        const [first, second] = file.relativePath.split('/');
+        return second ? first : null;
+      })
+      .filter(Boolean)
+  )
+).sort();
+
+---
+
+<Layout title={`${skill.title} · Curated Skills`} description={skill.description}>
+  <div class="space-y-6">
+    <nav class="text-xs text-zinc-500">
+      <a href="/" class="hover:text-zinc-900 hover:underline dark:hover:text-zinc-100">Skills</a>
+      <span class="mx-2">/</span>
+      <span class="font-mono">{skill.directoryName}</span>
+    </nav>
+
+    <section class="rounded-3xl border border-zinc-200/80 bg-white/75 p-6 backdrop-blur sm:p-8 dark:border-zinc-800 dark:bg-zinc-950/70">
+      <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+        <div class="min-w-0">
+          <p class="text-[11px] tracking-[0.18em] text-zinc-500 uppercase">{skill.directoryName}</p>
+          <h1 class="mt-2 font-serif text-4xl leading-tight tracking-tight sm:text-5xl">{skill.title}</h1>
+          <p class="mt-4 max-w-3xl text-sm leading-6 text-zinc-600 dark:text-zinc-300">{skill.description}</p>
+
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="rounded-full border border-zinc-300/80 px-3 py-1 text-xs font-mono dark:border-zinc-700">
+              {skill.fileCount} files
+            </span>
+            <span class="rounded-full border border-zinc-300/80 px-3 py-1 text-xs font-mono dark:border-zinc-700">
+              {skill.directoryCount} dirs
+            </span>
+            <span class="rounded-full border border-zinc-300/80 px-3 py-1 text-xs font-mono dark:border-zinc-700">
+              {formatBytes(skill.totalBytes)}
+            </span>
+            {skill.license && (
+              <span class="rounded-full border border-zinc-300/80 px-3 py-1 text-xs font-mono dark:border-zinc-700">
+                {skill.license}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div class="flex shrink-0 flex-wrap gap-2">
+          <a
+            href="/"
+            class="rounded-full border border-zinc-300/80 px-4 py-2 text-xs tracking-[0.16em] uppercase hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
+          >
+            Back
+          </a>
+          <a
+            href={`/download-skill/${encodeURIComponent(skill.slug)}`}
+            class="rounded-full border border-zinc-900 bg-zinc-900 px-4 py-2 text-xs tracking-[0.16em] text-white uppercase hover:opacity-90 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
+          >
+            Download ZIP
+          </a>
+          {skill.hasSkillMarkdown && (
+            <a
+              href={buildSkillDownloadHref(skill.slug, 'SKILL.md')}
+              download
+              class="rounded-full border border-zinc-300/80 px-4 py-2 text-xs tracking-[0.16em] uppercase hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
+            >
+              SKILL.md
+            </a>
+          )}
+        </div>
+      </div>
+
+      {topLevelSections.length > 0 && (
+        <div class="mt-6 rounded-2xl border border-zinc-200/80 bg-zinc-50/70 p-4 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <p class="text-[11px] tracking-[0.16em] text-zinc-500 uppercase">Top-Level Sections</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            {topLevelSections.map((section) => (
+              <span class="rounded-full border border-zinc-300/80 px-3 py-1 font-mono text-xs dark:border-zinc-700">
+                {section}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+
+    {skillDocPreview && (
+      <section class="rounded-2xl border border-zinc-200/80 bg-white/70 p-5 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/60">
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <div>
+            <p class="text-[11px] tracking-[0.16em] text-zinc-500 uppercase">SKILL.md Preview</p>
+            <p class="text-xs text-zinc-500">First lines from the primary instruction file.</p>
+          </div>
+          <a
+            href={`/skills/${encodeURIComponent(skill.slug)}/files/SKILL.md`}
+            class="rounded-full border border-zinc-300/80 px-3 py-1.5 text-xs uppercase hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
+          >
+            Open File
+          </a>
+        </div>
+        <pre class="overflow-x-auto rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-4 text-xs leading-6 text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"><code>{skillDocPreview}</code></pre>
+      </section>
+    )}
+
+    <section>
+      <div class="mb-3">
+        <p class="text-[11px] tracking-[0.16em] text-zinc-500 uppercase">Files</p>
+        <h2 class="mt-1 font-serif text-2xl tracking-tight sm:text-3xl">Browse content, scripts, and references</h2>
+      </div>
+      <SkillFileTable files={skill.files} skillSlug={skill.slug} />
+    </section>
+  </div>
+</Layout>
