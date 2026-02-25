@@ -15,7 +15,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="m-0 min-h-full scheme-light dark:scheme-dark">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -43,16 +43,16 @@ const {
       })();
     </script>
 	</head>
-	<body class="min-h-screen bg-white text-zinc-950 dark:bg-black dark:text-zinc-100">
+	<body class="m-0 min-h-screen min-h-full bg-white font-sans text-zinc-950 selection:bg-zinc-900 selection:text-white dark:bg-black dark:text-zinc-100 dark:selection:bg-zinc-100 dark:selection:text-black">
     <div class="relative min-h-screen">
       <div class="pointer-events-none absolute inset-0 opacity-70 dark:opacity-40">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(0,0,0,0.06),transparent_45%),radial-gradient(circle_at_80%_100%,rgba(0,0,0,0.05),transparent_50%)] dark:bg-[radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.09),transparent_45%),radial-gradient(circle_at_80%_100%,rgba(255,255,255,0.06),transparent_50%)]"></div>
-        <div class="absolute inset-0 [background-image:linear-gradient(to_right,rgba(0,0,0,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.045)_1px,transparent_1px)] [background-size:28px_28px] dark:[background-image:linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)]"></div>
+        <div class="absolute inset-0 [background-image:linear-gradient(to_right,rgba(0,0,0,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.045)_1px,transparent_1px)] [background-size:14px_14px] dark:[background-image:linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)]"></div>
       </div>
 
       <Header />
 
-      <main class="relative z-10 mx-auto w-full max-w-7xl px-6 py-8 md:px-8 sm:py-10">
+      <main class="relative z-10 mx-auto w-full max-w-7xl px-6 pb-6 pt-4 md:px-8 sm:py-10">
         <slot />
       </main>
 

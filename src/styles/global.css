@@ -10,36 +10,15 @@
 }
 
 :root {
-  color-scheme: light;
+  --accent: oklch(0.485 0.291 264.121);
 }
 
 :root.dark {
-  color-scheme: dark;
+  --accent: oklch(0.922 0.235 126.092);
 }
 
-html,
-body {
-  margin: 0;
-  min-height: 100%;
-}
-
-body {
-  font-family: var(--font-sans);
-}
-
-code,
-pre,
-kbd,
-samp {
-  font-family: var(--font-mono);
-}
-
-::selection {
-  background: rgb(24 24 27);
-  color: white;
-}
-
-.dark ::selection {
-  background: rgb(244 244 245);
-  color: black;
+html.dark .shiki,
+html.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
 }

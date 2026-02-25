@@ -2,6 +2,7 @@
 import Layout from '../../../layouts/Layout.astro';
 import SkillFileTable from '../../../components/SkillFileTable.astro';
 import { buildSkillDownloadHref, formatBytes, getSkillBySlug, getSkillFileContent, getSkillStaticPaths } from '../../../lib/skills';
+import { highlightMarkdownSource } from '../../../lib/highlight';
 
 export const prerender = true;
 
@@ -20,13 +21,9 @@ const skillDoc = skill.hasSkillMarkdown
   ? await getSkillFileContent(skill.slug, 'SKILL.md')
   : null;
 
-const skillDocPreview = skillDoc
-  ? skillDoc.content
-      .split(/\r?\n/)
-      .slice(0, 18)
-      .join('\n')
-      .trim()
-  : null;
+const skillDocPreview = skillDoc?.content ?? null;
+const skillDocPreviewLineCount = skillDocPreview ? skillDocPreview.replace(/\r\n/g, '\n').split('\n').length : 0;
+const skillDocPreviewHtml = skillDocPreview ? await highlightMarkdownSource(skillDocPreview) : null;
 
 const topLevelSections = Array.from(
   new Set(
@@ -83,7 +80,7 @@ const topLevelSections = Array.from(
           </a>
           <a
             href={`/download-skill/${encodeURIComponent(skill.slug)}`}
-            class="rounded-full border border-zinc-900 bg-zinc-900 px-4 py-2 text-xs tracking-[0.16em] text-white uppercase hover:opacity-90 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
+            class="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-4 py-2 text-xs tracking-[0.16em] text-white uppercase hover:opacity-90 dark:text-zinc-950"
           >
             Download ZIP
           </a>
@@ -118,16 +115,26 @@ const topLevelSections = Array.from(
         <div class="mb-3 flex items-center justify-between gap-3">
           <div>
             <p class="text-[11px] tracking-[0.16em] text-zinc-500 uppercase">SKILL.md Preview</p>
-            <p class="text-xs text-zinc-500">First lines from the primary instruction file.</p>
+            <p class="text-xs text-zinc-500">Full file preview with markdown syntax highlighting.</p>
           </div>
-          <a
-            href={`/skills/${encodeURIComponent(skill.slug)}/files/SKILL.md`}
-            class="rounded-full border border-zinc-300/80 px-3 py-1.5 text-xs uppercase hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
-          >
-            Open File
-          </a>
+          <div class="flex items-center gap-2">
+            <span class="rounded-full border border-zinc-300/80 px-2.5 py-1 font-mono text-[11px] dark:border-zinc-700">
+              {skillDocPreviewLineCount} lines
+            </span>
+            <a
+              href={`/skills/${encodeURIComponent(skill.slug)}/files/SKILL.md`}
+              class="rounded-full border border-zinc-300/80 px-3 py-1.5 text-xs uppercase hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
+            >
+              Open File
+            </a>
+          </div>
         </div>
-        <pre class="overflow-x-auto rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-4 text-xs leading-6 text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"><code>{skillDocPreview}</code></pre>
+        <div class="max-h-[40rem] overflow-auto rounded-xl border border-zinc-200/80 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-900/70">
+          <div
+            class="[&_.shiki]:m-0 [&_.shiki]:min-w-full [&_.shiki]:rounded-none [&_.shiki]:border-0 [&_.shiki]:p-4 [&_.shiki]:font-mono [&_.shiki]:text-xs [&_.shiki]:leading-6"
+            set:html={skillDocPreviewHtml}
+          />
+        </div>
       </section>
     )}
 
